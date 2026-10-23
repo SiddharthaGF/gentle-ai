@@ -20,6 +20,7 @@ import "os"
 // Tests may explicitly set overrides after isolation to exercise resolution.
 var overrideEnvVars = []string{
 	"PI_CODING_AGENT_DIR",
+	"DSH_HOME",
 	"OPENCODE_CONFIG_DIR",
 	"XDG_CONFIG_HOME",
 	"GENTLE_AI_HOME",

@@ -235,7 +235,7 @@ func TestOrchestratorModuleBaseline(t *testing.T) {
 		agentsSeen[input.agent], assetsSeen[input.asset] = true, true
 	}
 	for _, agent := range catalog.AllAgents() {
-		if agent.ID != model.AgentPi && agent.ID != model.AgentConductor && !agentsSeen[agent.ID] {
+		if agent.ID != model.AgentPi && agent.ID != model.AgentConductor && agent.ID != model.AgentDSH && !agentsSeen[agent.ID] {
 			t.Errorf("runtime %q has no baseline variant", agent.ID)
 		}
 	}

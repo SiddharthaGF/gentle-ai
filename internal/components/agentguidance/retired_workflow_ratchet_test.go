@@ -35,6 +35,9 @@ func TestRenderedGuidanceHasNoRetiredWorkflowReferences(t *testing.T) {
 		if agent.ID == model.AgentConductor {
 			continue // Catalog-only: no standalone guidance target.
 		}
+		if agent.ID == model.AgentDSH {
+			continue // Catalog-only: DSH consumes AGENTS.md automatically.
+		}
 		t.Run(string(agent.ID), func(t *testing.T) {
 			adapter, err := agents.NewAdapter(agent.ID)
 			if err != nil {

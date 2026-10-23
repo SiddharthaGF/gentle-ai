@@ -69,6 +69,7 @@ const (
 	AgentKiroIDE       AgentID = "kiro-ide"
 	AgentOpenClaw      AgentID = "openclaw"
 	AgentPi            AgentID = "pi"
+	AgentDSH           AgentID = "dsh"
 	AgentTrae          AgentID = "trae-ide"
 	AgentHermes        AgentID = "hermes"
 	AgentConductor     AgentID = "conductor"

@@ -9,6 +9,7 @@ import (
 	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/conductor"
 	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/copilotcli"
 	cursoradapter "github.com/gentleman-programming/gentle-ai/v4/internal/agents/cursor"
+	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/dsh"
 	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/gemini"
 	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/hermes"
 	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kilocode"
@@ -81,6 +82,8 @@ func NewAdapter(agent model.AgentID) (Adapter, error) {
 		return hermes.NewAdapter(), nil
 	case model.AgentConductor:
 		return conductor.NewAdapter(), nil
+	case model.AgentDSH:
+		return dsh.NewAdapter(), nil
 	case model.AgentGitHubCopilotCLI:
 		return copilotcli.NewAdapter(), nil
 	default:

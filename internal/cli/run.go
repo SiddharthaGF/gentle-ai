@@ -25,6 +25,7 @@ import (
 	"github.com/gentleman-programming/gentle-ai/v4/internal/agents/kimi"
 	opencodeagent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/opencode"
 	piagent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/pi"
+	dshagent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/dsh"
 	"github.com/gentleman-programming/gentle-ai/v4/internal/assets"
 	"github.com/gentleman-programming/gentle-ai/v4/internal/backup"
 	"github.com/gentleman-programming/gentle-ai/v4/internal/components/agentguidance"
@@ -1030,6 +1031,10 @@ func (r *installRuntime) stagePlan() pipeline.StagePlan {
 		}
 		apply = append(apply, piCodeGraphReconcileStep{id: stepID, homeDir: r.homeDir, workspaceDir: r.workspaceDir, selected: selected, state: r.state})
 	}
+
+	// DSH profile provisioning: provision managed MCP servers (CodeGraph, etc.)
+	// into any detected DSH profiles via patch layers.
+	apply = append(apply, dshProfileProvisionStep{id: "community-tool:dsh-profile-provision", homeDir: r.homeDir, state: r.state})
 
 	return pipeline.StagePlan{Prepare: prepare, Apply: apply}
 }
@@ -2617,6 +2622,29 @@ func (s piCodeGraphReconcileStep) Rollback() error {
 	_, err := communitytool.UninstallPiCodeGraph(s.homeDir)
 	return err
 }
+
+type dshProfileProvisionStep struct {
+	id, homeDir string
+	state       *runtimeState
+}
+
+func (s dshProfileProvisionStep) ID() string { return s.id }
+func (s dshProfileProvisionStep) Run() error {
+	// Skip provisioning when DSH is not installed (no home dir). Keeps
+	// install/sync pipelines green in environments without DSH.
+	if _, err := os.Stat(dshagent.ConfigPath(s.homeDir)); err != nil {
+		return nil
+	}
+	profileDir, err := dshagent.EnsureGentleProfile(s.homeDir)
+	if err != nil {
+		// No template profile (web/headless) available: nothing to provision.
+		return nil
+	}
+	return communitytool.ProvisionDSHProfile(communitytool.DSHProfileProvisionOptions{
+		ProfileDir: profileDir,
+	})
+}
+func (s dshProfileProvisionStep) Rollback() error { return nil }
 
 type prepareBackupStep struct {
 	id          string

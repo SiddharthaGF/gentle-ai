@@ -198,7 +198,7 @@ func RoutingPathsWithOptions(targetDir string, agent model.AgentID, options Rout
 // track that canonical contract (guarded by
 // TestConductorIsTheOnlyCatalogOnlyGuidanceTarget).
 func isCatalogOnlyGuidanceTarget(agent model.AgentID) bool {
-	return agent == model.AgentConductor
+	return agent == model.AgentConductor || agent == model.AgentDSH
 }
 
 // routingDeliveryKind names the three scopes an agent actually loads guidance

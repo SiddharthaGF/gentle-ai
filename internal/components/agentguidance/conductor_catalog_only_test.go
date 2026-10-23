@@ -60,7 +60,7 @@ func TestConductorIsTheOnlyCatalogOnlyGuidanceTarget(t *testing.T) {
 		// Pi claims no managed system prompt feature but keeps its own
 		// package-owned prompt delivery, so it is not catalog-only.
 		catalogOnly := !manifest.Features.SystemPrompt && agent.ID != model.AgentPi
-		if want := agent.ID == model.AgentConductor; catalogOnly != want {
+		if want := agent.ID == model.AgentConductor || agent.ID == model.AgentDSH; catalogOnly != want {
 			t.Fatalf("agent %q catalog-only = %v, want %v", agent.ID, catalogOnly, want)
 		}
 
