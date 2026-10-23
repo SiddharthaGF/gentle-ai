@@ -1062,7 +1062,9 @@ func syncPersonaPathsWithWorkspaceScoped(homeDir, workspaceDir string, scope Ins
 			continue
 		}
 		if adapter.SystemPromptStrategy() != model.StrategyJinjaModules {
-			paths = append(paths, adapter.SystemPromptFile(targetDir))
+			if p := adapter.SystemPromptFile(targetDir); p != "" {
+				paths = append(paths, p)
+			}
 		}
 		if adapter.SupportsOutputStyles() {
 			if stylePaths := persona.ResourcePlanFor(selection.Persona).OutputStylePaths(adapter.OutputStyleDir(targetDir)); stylePaths.Write != "" {

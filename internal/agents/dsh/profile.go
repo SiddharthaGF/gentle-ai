@@ -38,8 +38,28 @@ func EnsureGentleProfile(homeDir string) (string, error) {
 		}
 		_ = os.WriteFile(pkgPath, []byte(s), 0o644)
 	}
-	_ = os.WriteFile(filepath.Join(gentleDir, "cordis.patch.yml"), []byte("[]\n"), 0o644)
+	// Make the managed "gentleman" mode the default for this profile so ODD
+	// guidance and CodeGraph/Engram wiring load without an explicit switch.
+	patchPath := filepath.Join(gentleDir, "cordis.patch.yml")
+	if data, err := os.ReadFile(patchPath); err == nil {
+		s := string(data)
+		s = replaceAll(s, "default: standard", "default: gentleman")
+		_ = os.WriteFile(patchPath, []byte(s), 0o644)
+	}
 	return gentleDir, nil
+}
+
+// EnsureGentleDefaultMode makes the "gentleman" mode the default in an existing
+// DSH profile's cordis.patch.yml, so ODD guidance loads without an explicit
+// mode switch. Idempotent.
+func EnsureGentleDefaultMode(profileDir string) error {
+	patchPath := filepath.Join(profileDir, "cordis.patch.yml")
+	data, err := os.ReadFile(patchPath)
+	if err != nil {
+		return err
+	}
+	s := replaceAll(string(data), "default: standard", "default: gentleman")
+	return os.WriteFile(patchPath, []byte(s), 0o644)
 }
 
 func copyDir(src, dst string) error {

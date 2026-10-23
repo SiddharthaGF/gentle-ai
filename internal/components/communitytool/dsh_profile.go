@@ -2,6 +2,8 @@ package communitytool
 
 import (
 	"fmt"
+
+	dshagent "github.com/gentleman-programming/gentle-ai/v4/internal/agents/dsh"
 )
 
 // DSHProfileProvisionOptions holds the parameters for provisioning a DSH profile.
@@ -17,6 +19,8 @@ func ProvisionDSHProfile(opts DSHProfileProvisionOptions) error {
 	if opts.ProfileDir == "" {
 		return fmt.Errorf("profileDir is required")
 	}
+	// Best-effort: make the gentleman mode default so ODD guidance loads.
+	_ = dshagent.EnsureGentleDefaultMode(opts.ProfileDir)
 	if err := ProvisionDSHCodeGraph(opts.ProfileDir); err != nil {
 		return fmt.Errorf("codegraph MCP: %w", err)
 	}

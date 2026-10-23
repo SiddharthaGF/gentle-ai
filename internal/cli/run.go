@@ -4122,8 +4122,8 @@ func componentPathsWithWorkspaceScoped(homeDir, workspaceDir string, scope Insta
 			case model.StrategySeparateMCPFiles:
 				if adapter.Agent() == model.AgentClaudeCode && scope == ScopeGlobal {
 					paths = append(paths, claude.UserConfigPath(homeDir))
-				} else {
-					paths = append(paths, adapter.MCPConfigPath(targetDir, "engram"))
+				} else if p := adapter.MCPConfigPath(targetDir, "engram"); p != "" {
+					paths = append(paths, p)
 				}
 			case model.StrategyMergeIntoSettings:
 				if adapter.Agent() == model.AgentOpenCode {
@@ -4165,7 +4165,9 @@ func componentPathsWithWorkspaceScoped(homeDir, workspaceDir string, scope Insta
 				}
 			}
 			if adapter.SystemPromptStrategy() == model.StrategyMarkdownSections {
-				paths = append(paths, adapter.SystemPromptFile(targetDir))
+				if p := adapter.SystemPromptFile(targetDir); p != "" {
+					paths = append(paths, p)
+				}
 			}
 		case model.ComponentSDD:
 			// Jinja modular hubs (e.g. Kimi KIMI.md) are appended once below so SDD+Persona
@@ -4174,7 +4176,9 @@ func componentPathsWithWorkspaceScoped(homeDir, workspaceDir string, scope Insta
 			if adapter.SupportsSystemPrompt() &&
 				!opencoderuntimeplugins.AgentReceivesManagedOpenCodePlugins(adapter.Agent()) &&
 				adapter.SystemPromptStrategy() != model.StrategyJinjaModules {
-				paths = append(paths, adapter.SystemPromptFile(targetDir))
+				if p := adapter.SystemPromptFile(targetDir); p != "" {
+					paths = append(paths, p)
+				}
 			}
 			if adapter.SupportsSlashCommands() {
 				paths = append(paths, legacyassets.SlashCommandPaths(adapter.Agent(), adapter.CommandsDir(targetDir))...)
@@ -4236,7 +4240,9 @@ func componentPathsWithWorkspaceScoped(homeDir, workspaceDir string, scope Insta
 					}
 					break
 				}
-				paths = append(paths, adapter.MCPConfigPath(targetDir, "context7"))
+				if p := adapter.MCPConfigPath(targetDir, "context7"); p != "" {
+					paths = append(paths, p)
+				}
 			case model.StrategyMergeIntoSettings:
 				p := adapter.SettingsPath(targetDir)
 				if adapter.Agent() == model.AgentOpenCode {
@@ -4267,7 +4273,9 @@ func componentPathsWithWorkspaceScoped(homeDir, workspaceDir string, scope Insta
 				break
 			}
 			if adapter.SupportsSystemPrompt() && adapter.SystemPromptStrategy() != model.StrategyJinjaModules {
-				paths = append(paths, adapter.SystemPromptFile(targetDir))
+				if p := adapter.SystemPromptFile(targetDir); p != "" {
+					paths = append(paths, p)
+				}
 			}
 			if adapter.SupportsOutputStyles() {
 				if stylePaths := persona.ResourcePlanFor(selection.Persona).OutputStylePaths(adapter.OutputStyleDir(targetDir)); stylePaths.Write != "" {
@@ -4320,7 +4328,9 @@ func componentPathsWithWorkspaceScoped(homeDir, workspaceDir string, scope Insta
 	// is bootstrapped but not explicitly owned by any other component path list.
 	for _, adapter := range adapters {
 		if adapter.SystemPromptStrategy() == model.StrategyJinjaModules {
-			paths = append(paths, adapter.SystemPromptFile(homeDir))
+			if p := adapter.SystemPromptFile(homeDir); p != "" {
+				paths = append(paths, p)
+			}
 		}
 	}
 
