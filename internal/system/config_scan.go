@@ -53,6 +53,7 @@ func knownAgentConfigDirs(homeDir string) []ConfigState {
 		{Agent: "hermes", Path: filepath.Join(homeDir, ".hermes")},
 		{Agent: "conductor", Path: filepath.Join(homeDir, ".conductor")},
 		{Agent: "github-copilot-cli", Path: copilotconfig.Root(homeDir)},
+		{Agent: "dsh", Path: dshConfigDir(homeDir)},
 	}
 }
 
@@ -78,6 +79,16 @@ func kimiConfigDir(homeDir string) string {
 		return current
 	}
 	return filepath.Join(homeDir, ".kimi")
+}
+
+// dshConfigDir returns the DSH home directory, honoring the DSH_HOME env var
+// (mirroring internal/agents/dsh.ConfigPath) since config_scan cannot import
+// the agents package.
+func dshConfigDir(homeDir string) string {
+	if v := os.Getenv("DSH_HOME"); v != "" {
+		return v
+	}
+	return filepath.Join(homeDir, ".dsh")
 }
 
 // vscodeCopilotGlobalConfigDir returns ~/.copilot, the GlobalConfigDir used by

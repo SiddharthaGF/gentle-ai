@@ -682,6 +682,10 @@ func (r *syncRuntime) stagePlan() pipeline.StagePlan {
 		apply = append(apply, piCodeGraphSyncStep{id: "sync:community-tool:pi-codegraph", homeDir: r.homeDir, workspaceDir: r.workspaceDir, changedFiles: &r.changedFiles})
 	}
 
+	// DSH profile provisioning: provision managed MCP servers (CodeGraph, etc.)
+	// into any detected DSH profiles via patch layers (parity with install).
+	apply = append(apply, dshProfileProvisionStep{id: "community-tool:dsh-profile-provision", homeDir: r.homeDir, state: r.state})
+
 	return pipeline.StagePlan{Prepare: prepare, Apply: apply}
 }
 
