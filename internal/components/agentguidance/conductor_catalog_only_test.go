@@ -64,6 +64,12 @@ func TestConductorIsTheOnlyCatalogOnlyGuidanceTarget(t *testing.T) {
 			t.Fatalf("agent %q catalog-only = %v, want %v", agent.ID, catalogOnly, want)
 		}
 
+		// The skip predicate must track the same contract as the manifest,
+		// so a hardcoded exclusion cannot survive here unnoticed.
+		if got := isCatalogOnlyGuidanceTarget(agent.ID); got != catalogOnly {
+			t.Fatalf("agent %q isCatalogOnlyGuidanceTarget = %v, manifest says %v", agent.ID, got, catalogOnly)
+		}
+
 		adapter, err := agents.NewAdapter(agent.ID)
 		if err != nil {
 			t.Fatalf("NewAdapter(%q) error = %v", agent.ID, err)

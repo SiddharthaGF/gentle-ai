@@ -37,9 +37,6 @@ func orchestratorRuntimes(t *testing.T) []model.AgentID {
 		if agent.ID == model.AgentConductor {
 			continue // Catalog-only: no standalone guidance target.
 		}
-		if agent.ID == model.AgentDSH {
-			continue // Catalog-only: DSH consumes AGENTS.md automatically.
-		}
 		adapter, err := agents.NewAdapter(agent.ID)
 		if err != nil {
 			t.Fatalf("NewAdapter(%q) error = %v", agent.ID, err)
@@ -49,7 +46,7 @@ func orchestratorRuntimes(t *testing.T) []model.AgentID {
 		}
 		selected = append(selected, agent.ID)
 	}
-	if len(selected) != supportedAgentCount-3 {
+	if len(selected) != supportedAgentCount-2 {
 		t.Fatalf("selected %d orchestrator runtimes, want %d", len(selected), supportedAgentCount-2)
 	}
 	return selected

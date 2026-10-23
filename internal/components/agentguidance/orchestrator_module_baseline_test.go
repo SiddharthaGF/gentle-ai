@@ -77,6 +77,7 @@ var moduleVariantInputs = []moduleVariantInput{
 	{id: "trae-ide/small", agent: model.AgentTrae, capability: "small", asset: "generic/orchestrator.md"},
 	{id: "github-copilot-cli/capable", agent: model.AgentGitHubCopilotCLI, asset: "generic/orchestrator.md"},
 	{id: "github-copilot-cli/small", agent: model.AgentGitHubCopilotCLI, capability: "small", asset: "generic/orchestrator.md"},
+	{id: "dsh", agent: model.AgentDSH, asset: "generic/orchestrator.md"},
 }
 
 type moduleVariant struct {
@@ -229,13 +230,14 @@ func TestOrchestratorModuleBaseline(t *testing.T) {
 
 	// Every non-Pi runtime with a guidance target and every orchestrator asset
 	// is characterized. Pi's prompt is owned by Gentle Shell and Conductor is
-	// catalog-only, so neither renders an orchestrator here.
+	// catalog-only, so neither renders an orchestrator here. DSH does render
+	// one: it writes $DSH_HOME/AGENTS.md like any other runtime.
 	agentsSeen, assetsSeen := map[model.AgentID]bool{}, map[string]bool{}
 	for _, input := range moduleVariantInputs {
 		agentsSeen[input.agent], assetsSeen[input.asset] = true, true
 	}
 	for _, agent := range catalog.AllAgents() {
-		if agent.ID != model.AgentPi && agent.ID != model.AgentConductor && agent.ID != model.AgentDSH && !agentsSeen[agent.ID] {
+		if agent.ID != model.AgentPi && agent.ID != model.AgentConductor && !agentsSeen[agent.ID] {
 			t.Errorf("runtime %q has no baseline variant", agent.ID)
 		}
 	}

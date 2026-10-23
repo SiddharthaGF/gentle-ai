@@ -136,9 +136,6 @@ func TestRemoteAuthorizationPrimaryCarriers(t *testing.T) {
 		if agent.ID == model.AgentConductor {
 			continue // Catalog-only: no standalone guidance carrier (see conductor_catalog_only_test.go).
 		}
-		if agent.ID == model.AgentDSH {
-			continue // Catalog-only: DSH consumes AGENTS.md automatically.
-		}
 		covered++
 		t.Run(string(agent.ID), func(t *testing.T) {
 			home := t.TempDir()
@@ -162,8 +159,8 @@ func TestRemoteAuthorizationPrimaryCarriers(t *testing.T) {
 			}
 		})
 	}
-	if covered != 16 {
-		t.Fatalf("covered %d non-Pi clients, want 16", covered)
+	if covered != 17 {
+		t.Fatalf("covered %d non-Pi clients, want 17", covered)
 	}
 }
 
@@ -172,9 +169,6 @@ func TestInjectRoutingDeliversOnlyODDWorkflow(t *testing.T) {
 	for _, agent := range catalog.AllAgents() {
 		if agent.ID == model.AgentConductor {
 			continue // Catalog-only: no standalone guidance target.
-		}
-		if agent.ID == model.AgentDSH {
-			continue // Catalog-only: DSH consumes AGENTS.md automatically.
 		}
 		t.Run(string(agent.ID), func(t *testing.T) {
 			t.Parallel()
@@ -199,9 +193,6 @@ func TestInjectRoutingInstallsGuidanceForEverySupportedAgent(t *testing.T) {
 	for _, agent := range catalog.AllAgents() {
 		if agent.ID == model.AgentConductor {
 			continue // Catalog-only: covered by TestInjectRoutingNoOpsForCatalogOnlyConductor.
-		}
-		if agent.ID == model.AgentDSH {
-			continue // Catalog-only: DSH consumes AGENTS.md automatically.
 		}
 		t.Run(string(agent.ID), func(t *testing.T) {
 			t.Parallel()
@@ -279,9 +270,6 @@ func TestInjectRoutingStaysContainedUnderHostileEnvironment(t *testing.T) {
 	for _, agent := range catalog.AllAgents() {
 		if agent.ID == model.AgentConductor {
 			continue // Catalog-only: no standalone guidance target.
-		}
-		if agent.ID == model.AgentDSH {
-			continue // Catalog-only: DSH consumes AGENTS.md automatically.
 		}
 		t.Run(string(agent.ID), func(t *testing.T) {
 			targetDir := t.TempDir()
@@ -739,9 +727,6 @@ func TestInjectRoutingIsIdempotentForEverySupportedAgent(t *testing.T) {
 		if agent.ID == model.AgentConductor {
 			continue // Catalog-only: no standalone guidance target.
 		}
-		if agent.ID == model.AgentDSH {
-			continue // Catalog-only: DSH consumes AGENTS.md automatically.
-		}
 		t.Run(string(agent.ID), func(t *testing.T) {
 			t.Parallel()
 
@@ -872,9 +857,6 @@ func TestInjectRoutingDeliversNoRetiredControlPlaneVocabulary(t *testing.T) {
 		if agent.ID == model.AgentConductor {
 			continue // Catalog-only: no standalone guidance target.
 		}
-		if agent.ID == model.AgentDSH {
-			continue // Catalog-only: DSH consumes AGENTS.md automatically.
-		}
 		t.Run(string(agent.ID), func(t *testing.T) {
 			t.Parallel()
 
@@ -913,9 +895,6 @@ func markdownSectionAgents(t *testing.T) []model.AgentID {
 		if agent.ID == model.AgentConductor {
 			continue // Catalog-only: inherits Claude Code config, no prompt file of its own.
 		}
-		if agent.ID == model.AgentDSH {
-			continue // Catalog-only: DSH consumes AGENTS.md automatically.
-		}
 		adapter, err := agents.NewAdapter(agent.ID)
 		if err != nil {
 			t.Fatalf("NewAdapter(%q) error = %v", agent.ID, err)
@@ -925,8 +904,8 @@ func markdownSectionAgents(t *testing.T) []model.AgentID {
 		}
 		selected = append(selected, agent.ID)
 	}
-	if len(selected) != supportedAgentCount-5 {
-		t.Fatalf("selected %d markdown-section agents, want %d", len(selected), supportedAgentCount-5)
+	if len(selected) != supportedAgentCount-4 {
+		t.Fatalf("selected %d markdown-section agents, want %d", len(selected), supportedAgentCount-4)
 	}
 	return selected
 }

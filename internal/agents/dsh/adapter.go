@@ -59,7 +59,7 @@ func (a *Adapter) InstallCommand(_ system.PlatformProfile) ([][]string, error) {
 func (a *Adapter) GlobalConfigDir(homeDir string) string { return ConfigPath(homeDir) }
 func (a *Adapter) SystemPromptDir(homeDir string) string { return ConfigPath(homeDir) }
 func (a *Adapter) SystemPromptFile(homeDir string) string { return filepath.Join(ConfigPath(homeDir), "AGENTS.md") }
-func (a *Adapter) SkillsDir(_ string) string { return "" }
+func (a *Adapter) SkillsDir(homeDir string) string { return filepath.Join(ConfigPath(homeDir), "skills") }
 func (a *Adapter) SettingsPath(_ string) string { return "" }
 
 func (a *Adapter) SystemPromptStrategy() model.SystemPromptStrategy {

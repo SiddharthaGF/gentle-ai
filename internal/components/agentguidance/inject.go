@@ -196,9 +196,11 @@ func RoutingPathsWithOptions(targetDir string, agent model.AgentID, options Rout
 // Conductor inherits Claude Code configuration for the workspaces it manages,
 // and its capability manifest claims no managed system prompt; the skip must
 // track that canonical contract (guarded by
-// TestConductorIsTheOnlyCatalogOnlyGuidanceTarget).
+// TestConductorIsTheOnlyCatalogOnlyGuidanceTarget). DSH is not catalog-only: it
+// declares a system prompt and writes $DSH_HOME/AGENTS.md like any other
+// runtime, so it receives managed guidance.
 func isCatalogOnlyGuidanceTarget(agent model.AgentID) bool {
-	return agent == model.AgentConductor || agent == model.AgentDSH
+	return agent == model.AgentConductor
 }
 
 // routingDeliveryKind names the three scopes an agent actually loads guidance
